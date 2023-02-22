@@ -1,0 +1,8 @@
+<launch>
+<node pkg="eval_helper" type="multi_eval" name="multi_eval">
+    <param name="num_agents" value="4" />
+    <param name="query_rate" value="50" />
+    <param name="cmd_topic" value="/SQ0/goal" />
+    <param name="gt_topic" value="/map_generator/global_cylinder_state" />
+</node>
+</launch>
