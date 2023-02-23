@@ -21,16 +21,36 @@
 #include <visualization_msgs/MarkerArray.h>
 #include <Eigen/Core>
 #include <Eigen/Eigen>
+#include <Eigen/Geometry>
 #include <string>
 
 struct Obstacle {
-  double          radius;
-  double          height;
-  Eigen::Vector3d pos;
-  Eigen::Vector2d vel;
+  /** type 0: circle, 1: cylinder, 2:box
+   */
+  int    type;
+  double radius_x;
+  double radius_y;
+  double height;
+
+  Eigen::Vector3d    pos;
+  Eigen::Quaterniond q;
+  Eigen::Vector2d    vel;
   Obstacle() {}
-  Obstacle(double width, double height, Eigen::Vector3d pos, Eigen::Vector2d vel)
-      : radius(width), height(height), pos(std::move(pos)), vel(std::move(vel)) {}
+  Obstacle(int                type,
+           double             width_x,
+           double             width_y,
+           double             height,
+           Eigen::Vector3d    pos,
+           Eigen::Vector2d    vel,
+           Eigen::Quaterniond q)
+
+      : type(type)
+      , radius_x(width_x)
+      , radius_y(width_y)
+      , height(height)
+      , pos(std::move(pos))
+      , q(std::move(q))
+      , vel(std::move(vel)) {}
 };
 
 /**
@@ -163,17 +183,28 @@ class MultiAgentLogger {
     }
 
     for (auto& mk : msg->markers) {
-      double vx, vy, px, py, w, h;
+      double vx, vy, px, py, wx, wy, h;
       px = mk.points[0].x;
       py = mk.points[0].y;
-      w  = mk.scale.x / 2;
+      wx = mk.scale.x / 2;
+      wy = mk.scale.y / 2;
       h  = mk.points[0].z;
       vx = mk.points[1].x - mk.points[0].x;
       vy = mk.points[1].y - mk.points[0].y;
-      Eigen::Vector2d vel(vx, vy);
-      Eigen::Vector3d pos(px, py, 1.0);
 
-      Obstacle obs(w, h, pos, vel);
+      Eigen::Vector2d vel(vx, vy);
+      // Eigen::Quaterniond q(mk.pose.orientation.w, mk.pose.orientation.x, mk.pose.orientation.y,
+      //                      mk.pose.orientation.z);
+      Eigen::Quaterniond q = Eigen::Quaterniond(mk.pose.orientation.w, mk.pose.orientation.x,
+                                                mk.pose.orientation.y, mk.pose.orientation.z);
+      Eigen::Vector3d pos;
+        if (mk.type == 2) { // cirle
+            pos << mk.pose.position.x, mk.pose.position.y, mk.pose.position.z;
+        } else if (mk.type == 3) { //cylinder
+            pos << mk.pose.position.x, mk.pose.position.y, 1.0;
+        }
+
+      Obstacle obs(mk.type, wx, wy, h, pos, vel, q);
       obstacles_[mk.id] = obs;
     }
   }
@@ -208,13 +239,26 @@ class MultiAgentLogger {
 
   double getMinObsDist(const Eigen::Vector3d& pos) {
     double min_d_obs = 1e3;
-    for (auto obs : obstacles_) {
-      Eigen::Vector3d p_obs = obs.pos;
-      p_obs[2]              = pos.z();
+    for (auto obs : obstacles_) {  // cylinder
+      if (obs.type == 3) {
+        Eigen::Vector3d p_obs = obs.pos;
+        p_obs[2]              = pos.z();
 
-      double d = (p_obs - pos).norm() - obs.radius;
-      if (d < min_d_obs) {
-        min_d_obs = d;
+        double d = (p_obs - pos).norm() - obs.radius_x;
+        if (d < min_d_obs) {
+          min_d_obs = d;
+        }
+      } else if (obs.type == 2) {  // circle
+        Eigen::Hyperplane<double, 3> plane =
+            Eigen::Hyperplane<double, 3>::Through(obs.pos, obs.pos + obs.q * Eigen::Vector3d(1, 0, 0), obs.pos + obs.q * Eigen::Vector3d(1, 0, 0));
+        Eigen::Vector3d b = plane.projection(pos);
+
+        double vertical_dist   = plane.absDistance(pos);
+        double horizontal_dist = obs.radius_x - (obs.pos - b).norm();
+        double d = std::sqrt(std::pow(vertical_dist, 2) + std::pow(horizontal_dist, 2));
+        if (d < min_d_obs) {
+          min_d_obs = d;
+        }
       }
     }
     return min_d_obs;
