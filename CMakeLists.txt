@@ -42,5 +42,5 @@ target_link_libraries(multi_eval ${catkin_LIBRARIES})
 add_executable(trigger src/trigger.cpp)
 target_link_libraries(trigger ${catkin_LIBRARIES})
 
-add_executable(noisy_ground_truth src/noisy_ground_truth.cpp )
-target_link_libraries(noisy_ground_truth ${catkin_LIBRARIES})
+# add_executable(noisy_ground_truth src/noisy_ground_truth.cpp )
+# target_link_libraries(noisy_ground_truth ${catkin_LIBRARIES})
