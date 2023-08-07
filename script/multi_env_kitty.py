@@ -25,7 +25,7 @@ parser.add_argument("--world", type=str, default="_mader_4uav_19obs", help="worl
 parser.add_argument("--iters", type=int, default="1", help="number of agents")
 parser.add_argument("--num_agents", type=int, default="4", help="number of agents")
 parser.add_argument(
-    "--save_path", type=str, default="resultscylinder", help="folder name"
+    "--save_path", type=str, default="resultsnormal", help="folder name"
 )
 parser.add_argument("--waiting_time", type=float, default="20", help="waiting time")
 parser.add_argument(
