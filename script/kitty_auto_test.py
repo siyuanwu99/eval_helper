@@ -21,12 +21,15 @@ import calculate
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    "--world", type=str, default="egoplanner_4uav_19obs_new", help="world name"
+    "--world",
+    type=str,
+    default="ego_4uav_circle_case5_30obs_v2_a6_cls0.15_ir1.5",
+    help="world name",
 )
 parser.add_argument("--iters", type=int, default="1", help="number of agents")
 parser.add_argument("--num_agents", type=int, default="4", help="number of agents")
 parser.add_argument("--save_path", type=str, default="results", help="folder name")
-parser.add_argument("--waiting_time", type=float, default="50", help="waiting time")
+parser.add_argument("--waiting_time", type=float, default="40", help="waiting time")
 parser.add_argument(
     "--node_name",
     type=str,
@@ -48,7 +51,7 @@ parser.add_argument(
 parser.add_argument(
     "--cmd_launch",
     type=str,
-    default="roslaunch ego_planner dyn_evaluate.launch rviz:=false",
+    default="roslaunch ego_planner sim_fkpcp_4_case_3.launch rviz:=true obs_num:=25",
     # default="roslaunch ego_planner dyn_evaluate.launch rviz:=true",
 )
 parser.add_argument("--cmd_trigger", type=str, default="rosrun eval_helper trigger")
