@@ -8,16 +8,16 @@ Email: 947089399@qq.com
 EGO-Swarm | kitty
 """
 
-import os
-import time
-import sys
-import re
-import subprocess
 import argparse
 import csv
-import numpy as np
+import os
+import re
+import subprocess
+import sys
+import time
 
 import calculate
+import numpy as np
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -46,7 +46,7 @@ parser.add_argument(
 parser.add_argument(
     "--cmd_recorder",
     type=str,
-    default="roslaunch eval_helper eval.launch",
+    default="roslaunch eval_helper eval.launch num_agents:=8",
 )
 parser.add_argument(
     "--cmd_launch",
@@ -54,7 +54,8 @@ parser.add_argument(
     default="roslaunch ego_planner sim_fkpcp_4_case_3.launch rviz:=true obs_num:=25",
     # default="roslaunch ego_planner dyn_evaluate.launch rviz:=true",
 )
-parser.add_argument("--cmd_trigger", type=str, default="rosrun eval_helper trigger")
+parser.add_argument("--cmd_trigger", type=str,
+                    default="rosrun eval_helper trigger")
 
 
 def startPlanner():
@@ -68,7 +69,8 @@ def checkIfNodeRunning(node_name):
 
 
 def cleanROSLog():
-    os.system("kitty @ launch bash -c '%s; rosclean purge -y'" % "source ~/.bashrc")
+    os.system("kitty @ launch bash -c '%s; rosclean purge -y'" %
+              "source ~/.bashrc")
 
 
 def stopNode(node_name):
@@ -86,7 +88,8 @@ def startAll(arg):
     os.system("kitty @ launch bash -c '%s; %s;'" % (arg.cmd_source, arg.cmd_recorder))
     time.sleep(5)
     # Start planning
-    os.system("kitty @ launch bash -c '%s; %s;'" % (arg.cmd_source, arg.cmd_trigger))
+    os.system("kitty @ launch bash -c '%s; %s;'" %
+              (arg.cmd_source, arg.cmd_trigger))
 
 
 def stopAll():
@@ -115,16 +118,20 @@ def findAndRecord(args, save_path):
     # extract data from file:
     data = calculate.get_data(args.num_agents, eval_log_path)
 
-    ctrl_efforts = np.array([calculate.get_sum_control_efforts(d) for d in data])
+    ctrl_efforts = np.array(
+        [calculate.get_sum_control_efforts(d) for d in data])
     flight_times = np.array([calculate.get_avg_flight_time(d) for d in data])
 
-    n_cld_obs = np.array([calculate.get_collision_occurance(d, 12) for d in data])
+    n_cld_obs = np.array(
+        [calculate.get_collision_occurance(d, 12) for d in data])
     d_cld_obs = np.array([np.min(d[:, 12]) for d in data])
 
-    n_cld_uav = np.array([calculate.get_collision_occurance(d, 13) for d in data])
+    n_cld_uav = np.array(
+        [calculate.get_collision_occurance(d, 13) for d in data])
     d_cld_uav = np.array([np.min(d[:, 13]) for d in data])
 
-    n_no_path_cld = np.array([calculate.get_no_path_collision(d) for d in data])
+    n_no_path_cld = np.array(
+        [calculate.get_no_path_collision(d) for d in data])
 
     arr_to_write = np.hstack(
         [
@@ -141,7 +148,7 @@ def findAndRecord(args, save_path):
 
 
 def run(arg):
-    save_path = arg.save_path + "_" + arg.world + "_ground_truth" + ".csv"
+    save_path = arg.save_path + arg.world + "_ground_truth" + ".csv"
 
     if not arg.no_run:
         cleanROSLog()

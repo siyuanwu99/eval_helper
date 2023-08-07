@@ -24,10 +24,10 @@ ros::Publisher noisy_odom_pub_, noisy_pose_pub_;
 int                              seed_;
 double                           mu_x_, mu_y_, mu_z_;
 double                           sigma_x_, sigma_y_, sigma_z_;
-std::default_random_engine       noise_generator_;
-std::normal_distribution<double> dis_x_;
-std::normal_distribution<double> dis_y_;
-std::normal_distribution<double> dis_z_;
+std::default_random_engine       ng_;
+std::normal_distribution<double> loc_noise_x_;
+std::normal_distribution<double> loc_noise_y_;
+std::normal_distribution<double> loc_noise_z_;
 
 void odomCallback(const nav_msgs::Odometry& msg) {
   nav_msgs::Odometry noisy_odom;
@@ -37,9 +37,9 @@ void odomCallback(const nav_msgs::Odometry& msg) {
   noisy_odom.header.stamp    = msg.header.stamp;
 
   /** generate noise */
-  double x = dis_x_(noise_generator_);
-  double y = dis_y_(noise_generator_);
-  double z = dis_z_(noise_generator_);
+  double x = loc_noise_x_(ng_);
+  double y = loc_noise_y_(ng_);
+  double z = loc_noise_z_(ng_);
 
   //  ROS_INFO_STREAM("Generate noise: x " << x << " y " << y << " z " << z);
 
@@ -65,9 +65,9 @@ void poseCallback(const geometry_msgs::PoseStamped& msg) {
   noisy_pose.header.stamp    = msg.header.stamp;
   noisy_pose.header.frame_id = msg.header.frame_id;
 
-  double x = dis_x_(noise_generator_);
-  double y = dis_y_(noise_generator_);
-  double z = dis_z_(noise_generator_);
+  double x = loc_noise_x_(ng_);
+  double y = loc_noise_y_(ng_);
+  double z = loc_noise_z_(ng_);
 
   //  ROS_INFO_STREAM("Generate noise: x " << x << " y " << y << " z " << z);
   noisy_pose.pose.position.x    = msg.pose.position.x + x;
@@ -94,10 +94,10 @@ int main(int argc, char** argv) {
   ROS_INFO("[NOISE MAKER] Odom noise sigma_y_ = %lf", sigma_y_);
   ROS_INFO("[NOISE MAKER] Odom noise sigma_z_ = %lf", sigma_z_);
 
-  noise_generator_.seed(time(NULL));
-  dis_x_ = std::normal_distribution<double>(mu_x_, sigma_x_);
-  dis_y_ = std::normal_distribution<double>(mu_y_, sigma_y_);
-  dis_z_ = std::normal_distribution<double>(mu_z_, sigma_z_);
+  ng_.seed(time(NULL));
+  loc_noise_x_ = std::normal_distribution<double>(mu_x_, sigma_x_);
+  loc_noise_y_ = std::normal_distribution<double>(mu_y_, sigma_y_);
+  loc_noise_z_ = std::normal_distribution<double>(mu_z_, sigma_z_);
 
   ros::Subscriber odom_sub =
       nh.subscribe("origin_odom", 1, &odomCallback, ros::TransportHints().tcpNoDelay());

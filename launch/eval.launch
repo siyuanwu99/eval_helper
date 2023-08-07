@@ -1,8 +1,12 @@
+<?xml version="1.0"?>
 <launch>
+<arg name="num_agents" default="4" />
+<arg name="query_rate" default="50" />
+
 <node pkg="eval_helper" type="multi_eval" name="multi_eval">
-    <param name="num_agents" value="4" />
-    <param name="query_rate" value="50" />
-    <param name="cmd_topic" value="/drone_0_planning/pos_cmd" />
-    <param name="gt_topic" value="/map_generator/global_cylinder_state" />
+    <param name="num_agents" value="$(arg num_agents)" />
+    <param name="query_rate" value="$(arg query_rate)" />
+    <param name="cmd_topic" value="/uav0/controller/pos_cmd" />
+    <param name="gt_topic" value="/ground_truth_state" />
 </node>
 </launch>
