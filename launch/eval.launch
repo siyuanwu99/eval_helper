@@ -6,7 +6,7 @@
 <node pkg="eval_helper" type="multi_eval" name="multi_eval">
     <param name="num_agents" value="$(arg num_agents)" />
     <param name="query_rate" value="$(arg query_rate)" />
-    <param name="cmd_topic" value="/uav0/controller/pos_cmd" />
-    <param name="gt_topic" value="/ground_truth_state" />
+    <param name="cmd_topic" value="/drone_0_planning/pos_cmd" />
+    <param name="gt_topic" value="/map_generator/global_cylinder_state" />
 </node>
 </launch>
