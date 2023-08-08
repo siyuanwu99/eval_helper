@@ -1,0 +1,32 @@
+<launch>
+  <arg name="num_agents" default="4" />
+  <arg name="seed" default="0" />
+  <arg name="localization_stddev" default="0.0" />
+  <arg name="time_sync_stddev" default="0.0" />
+  <arg name="tracking_stddev" default="0.0" />
+
+
+  <node name="traj_noise_maker" pkg="eval_helper" type="traj_noise_maker" output="screen" >
+    <param name="num_agents" value="$(arg num_agents)"/>
+    <param name="noise/seed" value="$(arg seed)"/>
+    <param name="noise/loc/x" value="$(arg localization_stddev)"/>
+    <param name="noise/loc/y" value="$(arg localization_stddev)"/>
+    <param name="noise/loc/z" value="$(arg localization_stddev)"/>
+    <param name="noise/time_syn" value="$(arg time_sync_stddev)"/>
+    <param name="noise/tracking" value="$(arg tracking_stddev)"/>
+  </node>
+
+
+  <node pkg="traj_server" name="color_traj" type="color_traj">
+    <remap from="~bezier_traj" to="/broadcast_traj" />
+    <remap from="~color_traj" to="/color_traj" />
+    <param name="max_vel" value="2.5" />
+  </node>
+
+  <node pkg="traj_server" name="noisy_color_traj" type="color_traj">
+    <remap from="~bezier_traj" to="/noisy_traj" />
+    <remap from="~color_traj" to="/color_noisy_traj" />
+    <param name="max_vel" value="2.5" />
+  </node>
+
+</launch>
