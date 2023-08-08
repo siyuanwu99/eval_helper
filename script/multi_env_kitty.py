@@ -24,7 +24,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--world", type=str, default="_mader_4uav_19obs", help="world name")
 parser.add_argument("--iters", type=int, default="1", help="number of agents")
 parser.add_argument("--num_agents", type=int, default="4", help="number of agents")
-parser.add_argument("--save_path", type=str, default="cylinder", help="folder name")
+parser.add_argument(
+    "--save_path", type=str, default="resultscylinder", help="folder name"
+)
 parser.add_argument("--waiting_time", type=float, default="20", help="waiting time")
 parser.add_argument(
     "--node_name",
@@ -81,21 +83,21 @@ if __name__ == "__main__":
         # "roslaunch mader sim_fkpcp_4_case_3.launch rviz:=true obs_num:=25",
         # "roslaunch mader sim_fkpcp_4_case_3.launch rviz:=true obs_num:=35",
         # "roslaunch mader sim_fkpcp_4_case_3.launch rviz:=true obs_num:=45",
-        "roslaunch mader sim_fkpcp_4_case_0.launch rviz:=true obs_num:=50",
-        "roslaunch mader sim_fkpcp_4_case_0.launch rviz:=true obs_num:=40",
-        "roslaunch mader sim_fkpcp_4_case_0.launch rviz:=true obs_num:=30",
-        "roslaunch mader sim_fkpcp_4_case_0.launch rviz:=true obs_num:=20",
-        "roslaunch mader sim_fkpcp_4_case_0.launch rviz:=true obs_num:=10",
-        "roslaunch mader sim_fkpcp_4_case_3.launch rviz:=true obs_num:=50",
-        "roslaunch mader sim_fkpcp_4_case_3.launch rviz:=true obs_num:=40",
-        "roslaunch mader sim_fkpcp_4_case_3.launch rviz:=true obs_num:=30",
-        "roslaunch mader sim_fkpcp_4_case_3.launch rviz:=true obs_num:=20",
-        "roslaunch mader sim_fkpcp_4_case_3.launch rviz:=true obs_num:=10",
-        "roslaunch mader sim_fkpcp_4_case_4.launch rviz:=true obs_num:=50",
-        "roslaunch mader sim_fkpcp_4_case_4.launch rviz:=true obs_num:=40",
-        "roslaunch mader sim_fkpcp_4_case_4.launch rviz:=true obs_num:=30",
-        "roslaunch mader sim_fkpcp_4_case_4.launch rviz:=true obs_num:=20",
-        "roslaunch mader sim_fkpcp_4_case_4.launch rviz:=true obs_num:=10",
+        "roslaunch mader sim_fkpcp_4_case_0.launch rviz:=false obs_num:=50",
+        "roslaunch mader sim_fkpcp_4_case_0.launch rviz:=false obs_num:=40",
+        "roslaunch mader sim_fkpcp_4_case_0.launch rviz:=false obs_num:=30",
+        "roslaunch mader sim_fkpcp_4_case_0.launch rviz:=false obs_num:=20",
+        "roslaunch mader sim_fkpcp_4_case_0.launch rviz:=false obs_num:=10",
+        "roslaunch mader sim_fkpcp_4_case_3.launch rviz:=false obs_num:=50",
+        "roslaunch mader sim_fkpcp_4_case_3.launch rviz:=false obs_num:=40",
+        "roslaunch mader sim_fkpcp_4_case_3.launch rviz:=false obs_num:=30",
+        "roslaunch mader sim_fkpcp_4_case_3.launch rviz:=false obs_num:=20",
+        "roslaunch mader sim_fkpcp_4_case_3.launch rviz:=false obs_num:=10",
+        "roslaunch mader sim_fkpcp_4_case_4.launch rviz:=false obs_num:=50",
+        "roslaunch mader sim_fkpcp_4_case_4.launch rviz:=false obs_num:=40",
+        "roslaunch mader sim_fkpcp_4_case_4.launch rviz:=false obs_num:=30",
+        "roslaunch mader sim_fkpcp_4_case_4.launch rviz:=false obs_num:=20",
+        "roslaunch mader sim_fkpcp_4_case_4.launch rviz:=false obs_num:=10",
         # "roslaunch mader sim_fkpcp_4_case_4.launch rviz:=false obs_num:=50",
     ]
     trigger_cmds = [
