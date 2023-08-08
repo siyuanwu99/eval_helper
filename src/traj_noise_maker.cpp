@@ -43,8 +43,11 @@ void trajCallback(const traj_utils::MINCOTrajConstPtr& msg) {
   }
 
   /* generate noise */
-  ros::Time noisy_t_start =
-      t_start + ros::Duration(sync_errors_[id]) + ros::Duration(tracking_noise_(ng_));
+  double tracking_noise = tracking_noise_(ng_);
+  double sync_noise     = sync_errors_[id];
+  ROS_INFO_STREAM("[TrajNoiseMaker] Agent " << id << " tracking noise: " << tracking_noise
+                                            << ", sync noise: " << sync_noise);
+  ros::Time noisy_t_start = t_start + ros::Duration(sync_noise) + ros::Duration(tracking_noise);
   /* @NOTE: the tracking error is considered as the difference between the
    * start time of the trajectory */
   traj_utils::MINCOTraj noisy_traj;
