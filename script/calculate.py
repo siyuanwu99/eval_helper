@@ -5,11 +5,12 @@ Author: Siyuan Wu
 Email: siyuanwu99@gmail.com
 """
 
-import numpy as np
-import sys
 import os
 import re
+import sys
+
 import matplotlib.pyplot as plt
+import numpy as np
 
 file_root = "/home/siyuan/.ros/log/latest/"
 file_name = "multi_eval-1-stdout.log"
@@ -41,9 +42,12 @@ def read_file(path, data):
                     line,
                 )
                 yaw = re.search(r"yaw: ([-+]?\d+\.?\d*),", line).group(1)
-                yaw_rate = re.search(r"yaw_rate: ([-+]?\d+\.?\d*)", line).group(1)
-                min_obs_dist = re.search(r"min_d_obs: ([-+]?\d+\.?\d*)", line).group(1)
-                min_uav_dist = re.search(r"min_d_uav: ([-+]?\d+\.?\d*)", line).group(1)
+                yaw_rate = re.search(
+                    r"yaw_rate: ([-+]?\d+\.?\d*)", line).group(1)
+                min_obs_dist = re.search(
+                    r"min_d_obs: ([-+]?\d+\.?\d*)", line).group(1)
+                min_uav_dist = re.search(
+                    r"min_d_uav: ([-+]?\d+\.?\d*)", line).group(1)
 
                 data[id].append(
                     np.array(
@@ -84,9 +88,9 @@ def get_avg_flight_time(d):
     return tf - t0
 
 
-def get_collision_occurance(d, idx):
+def get_collision_occurance(d, idx, min_dist=0):
     dist = d[:, idx]
-    danger_idx = np.where(dist < 0.0)[0]
+    danger_idx = np.where(dist < min_dist)[0]
     if len(danger_idx) == 0:
         return 0
     n_collision = np.sum(np.diff(danger_idx) > 1) + 1
@@ -166,7 +170,7 @@ def get_data(n, file_path):
 
     data = [[] for i in range(n)]
     read_file(file_path, data)
-    for (i, d) in enumerate(data):
+    for i, d in enumerate(data):
         data_np = np.array(d)
         data[i] = data_np
     return data
@@ -191,7 +195,7 @@ if __name__ == "__main__":
     data = [[] for _ in range(num_agents)]
 
     read_file(file_path, data)
-    for (i, d) in enumerate(data):
+    for i, d in enumerate(data):
         data_np = np.array(d)
         print(data_np.shape)
         data[i] = data_np

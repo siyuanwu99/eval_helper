@@ -127,7 +127,7 @@ def findAndRecord(args, save_path):
     d_cld_obs = np.array([np.min(d[:, 12]) for d in data])
 
     n_cld_uav = np.array(
-        [calculate.get_collision_occurance(d, 13) for d in data])
+        [calculate.get_collision_occurance(d, 13, 0.30) for d in data])
     d_cld_uav = np.array([np.min(d[:, 13]) for d in data])
 
     n_no_path_cld = np.array(
